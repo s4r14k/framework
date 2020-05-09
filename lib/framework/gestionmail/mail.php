@@ -32,7 +32,17 @@ class Mail {
 					
 		$subject = "[EverReady.ai] - Information on your customer areas";
 		
-		$body = "<html><body>Hello {$prenom}, <br>Here is the information concerning to connect to your customer areas<br>Email : {$email}<br>Password : {$pass}<br></body></html>";
+		$body = "<html>
+					<body>
+						Hello {$prenom}, 
+						<br>Your account has been validated. Thank you for registering to our services.
+						<br>Below are the information you registered :
+						<br>Email : {$email}
+						<br>Password : {$pass}
+						<br>Thank you
+						<br>
+					</body>
+				</html>";
 		return mail ($email, $subject, $body, $headers);
 	}
 
