@@ -61,9 +61,9 @@ class Mail {
 					<body>
 						Welcome to EverReady,
 						<br>Please click the button below to VALIDATE your email address and activate our account
-						<br><a href='#'>Activate</a>
+						<br><a href='{$caractere}'>Activate</a>
 						<br>If the above button does not work, click on the link below or copy and paste it into your browser:
-						<br><a href='#'>everready.ai</a>
+						<br><a href='{$caractere}'>{$caractere}</a>
 					</body>
 				</html>";
 
