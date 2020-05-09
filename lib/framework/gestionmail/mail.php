@@ -47,7 +47,15 @@ class Mail {
 					
 		$subject = "Validate your email address";
 		
-		$body = "<html><body>Please click the link below to Validate your email address<br></body></html>";
+		$body = "<html>
+					<body>
+						Welcome to EverReady,
+						<br>Please click the button below to VALIDATE your email address and activate our account
+						<br><a href='#'>Activate</a>
+						<br>If the above button does not work, click on the link below or copy and paste it into your browser:
+						<br><a href='#'>everready.ai</a>
+					</body>
+				</html>";
 
 		return mail ($email, $subject, $body, $headers);
 	}
