@@ -66,8 +66,8 @@ class Manager {
     static function set_utilisateur ($nom, $prenom, $email, $phone, $pass, $role, $my_db) {
 
 		if ($stmt = $my_db->prepare('
-				INSERT INTO utilisateur (nom, prenom, email, phone, pass, role)
-				VALUES (:nom, :prenom, :email, :phone, :pass, :role)
+				INSERT INTO utilisateur (nom, prenom, email, phone, pass, role, user_registerd)
+				VALUES (:nom, :prenom, :email, :phone, :pass, :role, NOW())
 
 			')) {
 			$stmt->execute(array(
@@ -267,7 +267,7 @@ class Manager {
 		
 		$user = $my_db->query('SELECT id, nom, prenom, email, role FROM utilisateur ORDER BY id desc limit 1');
 		$retour = $user->fetch();
-		self::update_info_utilisateur($retour['id'], "", "", "", "", $my_db);
+		self::update_info_utilisateur($retour['id'], "", "", "", "00:00:0000", $my_db);
 
 
 		$my_db->commit();

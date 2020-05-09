@@ -15,7 +15,7 @@ class Database extends PDO {
 		$dsn = $etting['database']['db_sql'] . ':host=' . $etting['database']['host'] . ';dbname=' . $etting['database']['schema'];
          
         //soit à crypter le mot de pass   
-        parent::__construct ($dsn, $etting['database']['db_utilisateur'], '7N5OVWsyYRgB'); // "z[GS}9_ZANQu"
+        parent::__construct ($dsn, $etting['database']['db_utilisateur'], 'nwsbf9xw745m'); // "z[GS}9_ZANQu"
 
     }
 }
