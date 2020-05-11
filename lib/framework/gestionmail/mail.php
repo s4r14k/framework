@@ -49,7 +49,6 @@ class Mail {
 	static function envoyer_confirmation_email ($email, $caractere) {
 
 		$headers = 'From:EverReady.ai <wordpress@everready.ai>' . "\r\n";
-		// $headers .= "Return-Path:hello@hedee.co" . "\r\n";
 		$headers .= "X-Mailer: PHP" . "\r\n";
 		$headers .= "MIME-Version: 1.0" . "\r\n";
 		$headers .=	"Content-Type: text/html; charset=utf-8" . "\r\n";
