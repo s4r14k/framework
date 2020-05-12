@@ -27,12 +27,8 @@ class Utilisateur {
 		$id_user = filter_var($id_user, FILTER_SANITIZE_STRING);
 
 		if ($req = $my_db->prepare('
-				SELECT u.id, u.nom, u.prenom, u.email, r.type, c.is_confirm
+				SELECT u.id, u.nom, u.prenom, u.email
 				FROM utilisateur u
-				LEFT JOIN role r
-				ON r.id = u.role
-				LEFT JOIN confirmation c
-				ON c.id_user = u.id
 				WHERE u.id = :id_user
 				LIMIT 1 
 			')) {
