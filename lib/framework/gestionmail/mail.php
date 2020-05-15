@@ -24,7 +24,7 @@ class Mail {
 	// Mail statut
 	static function send_client_access ($prenom, $email, $pass) {
 
-		$headers = 'From:EverReady.ai <wordpress@everready.ai>' . "\r\n";
+		$headers = 'From:Support EverReady.ai <info@everready.ai>' . "\r\n";
 		// $headers .= "Return-Path:wordpress@everready.ai" . "\r\n";
 		$headers .= "X-Mailer: PHP" . "\r\n";
 		$headers .= "MIME-Version: 1.0" . "\r\n";
@@ -48,7 +48,7 @@ class Mail {
 
 	static function envoyer_confirmation_email ($email, $caractere) {
 
-		$headers = 'From:EverReady.ai <wordpress@everready.ai>' . "\r\n";
+		$headers = 'From:Support EverReady.ai <info@everready.ai>' . "\r\n";
 		$headers .= "X-Mailer: PHP" . "\r\n";
 		$headers .= "MIME-Version: 1.0" . "\r\n";
 		$headers .=	"Content-Type: text/html; charset=utf-8" . "\r\n";
@@ -70,16 +70,12 @@ class Mail {
 	}
 
 	static function envoyer_pass_oublie ($email, $pass) {
-		// $headers = 'From:bouya.koit@gmail.com\r\n';
 
-		$headers = 'From:Hedee <hello@hedee.co>' . "\r\n";
-		$headers .= "Return-Path:hello@hedee.co" . "\r\n";
+		$headers = 'From:Support EverReady.ai <info@everready.ai>' . "\r\n";
 		$headers .= "X-Mailer: PHP" . "\r\n";
 		$headers .= "MIME-Version: 1.0" . "\r\n";
 		$headers .=	"Content-Type: text/html; charset=utf-8" . "\r\n";
 		// $headers .=	"Cc:sarikraf@gmail.com,claudia@diris.fr" . "\r\n";
-
-		// $headers .=	'Cc: bouya.koit@gmail.com,sarikraf@gmail.com' . "\r\n";
 					
 		$subject = "[HEDEE CO] - Mot de passe oublié";
 		
@@ -89,14 +85,11 @@ class Mail {
 
 
 	static function envoyer_mail_premium ($email) {
-		// $headers = 'From:bouya.koit@gmail.com\r\n';
 
-		$headers = 'From:Hedee <hello@hedee.co>' . "\r\n";
-		$headers .= "Return-Path:hello@hedee.co" . "\r\n";
+		$headers = 'From:Support EverReady.ai <info@everready.ai>' . "\r\n";
 		$headers .= "X-Mailer: PHP" . "\r\n";
 		$headers .= "MIME-Version: 1.0" . "\r\n";
 		$headers .=	"Content-Type: text/html; charset=utf-8" . "\r\n";
-		// $headers .=	"Cc:sarikraf@gmail.com,claudia@diris.fr" . "\r\n";
 					
 		$subject = "[OFFRE PREMIUM] - Nouvelle Souscription";
 		
