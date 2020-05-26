@@ -63,11 +63,11 @@ class Manager {
 		}
     }
     
-    static function set_utilisateur ($nom, $prenom, $email, $phone, $pass, $role, $my_db) {
+    static function set_utilisateur ($nom, $prenom, $email, $phone, $pass, $my_db) {
 
 		if ($stmt = $my_db->prepare('
-				INSERT INTO utilisateur (nom, prenom, email, phone, pass, role, user_registerd)
-				VALUES (:nom, :prenom, :email, :phone, :pass, :role, NOW())
+				INSERT INTO utilisateur (nom, prenom, email, phone, pass, user_registerd)
+				VALUES (:nom, :prenom, :email, :phone, :pass, NOW())
 
 			')) {
 			$stmt->execute(array(
@@ -75,9 +75,7 @@ class Manager {
 				'prenom' => $prenom,
 				'email' => $email,
 				'phone' => $phone,
-                'pass' => $pass,
-				'role' => $role ,
-                 
+                'pass' => $pass
 			));
 		}
     }
@@ -113,7 +111,7 @@ class Manager {
 				'adress' => $adress,
 				'postal' => $postal,
 				'ville' => $ville,
-				'date_naissance' => $date_naissance,
+				'date_naissance' => $date_naissance
 			));
 
 			$stmt = "";
@@ -263,12 +261,11 @@ class Manager {
 		// $id_img = $my_db->query('SELECT id As id_image FROM gallerie_images ORDER BY id desc limit 1');
         // $image_id = $id_img->fetch();
         
-        self::set_utilisateur($nom, $prenom, $email, $phone, $pass, $role, $my_db);
+        self::set_utilisateur($nom, $prenom, $email, $phone, $pass, $my_db);
 		
-		$user = $my_db->query('SELECT id, nom, prenom, email, role FROM utilisateur ORDER BY id desc limit 1');
+		$user = $my_db->query('SELECT id FROM utilisateur ORDER BY id desc limit 1');
 		$retour = $user->fetch();
 		self::update_info_utilisateur($retour['id'], "", "", "", "00:00:0000", $my_db);
-
 
 		$my_db->commit();
 		$stmt = "";
@@ -276,7 +273,7 @@ class Manager {
 		$image_id = "";
 
 
-		return $retour;
+		return true;
 
 	}
 
@@ -362,48 +359,6 @@ class Manager {
 		}
 
 	}
-
-	static function set_startup ($nom, $prenom, $email, $phone, $pass, $role, $raison_social, $objet_social, $adresse, $nif, $stat, $rcs, $img1, $img2, $my_db) {
-		$my_db->beginTransaction();
-
-		self::image("startup", "", $img1, $img2, $my_db);
-
-		$id_img = $my_db->query('SELECT id As id_image FROM gallerie_images ORDER BY id desc limit 1');
-        $image_id = $id_img->fetch();
-        
-        self::set_utilisateur($nom, $prenom, $email, $pass, $role, $my_db);
-
-        $id = $my_db->query('SELECT id As id_user FROM utilisateur ORDER BY id desc limit 1');
-		$id_user = $id->fetch();
-
-		self::key_startup($nif, $stat, $rcs, $my_db);
-
-		$id_key_startup = $my_db->query('SELECT id As id_key FROM key_startup ORDER BY id desc limit 1');
-		$id_key = $id_key_startup->fetch();
-
-		if ($stmt = $my_db->prepare('
-				INSERT INTO startup (id_user, raison_social, objet_social, adresse, phone, photo, date_creation, key_startup)
-				VALUES (:id_user, :raison_social, :objet_social, :adresse, :phone, :photo, :date_creation, :key_startup)
-			')) {
-			$stmt->execute(array(
-				'id_user' => $id_user['id_user'],
-				'raison_social' => $raison_social,
-				'objet_social' => $objet_social,
-				'adresse' => $adresse,
-				'phone' => $phone,
-				'photo' => $image_id['id_image'],
-				'date_creation' => $date_creation,
-				'key_startup' => $id_key['id_key']
-			));
-		}
-
-
-		$my_db->commit();
-		$stmt = "";
-		$id_user = "";
-		$image_id = "";
-
-	}
 	
 	static function set_contact ($email, $sujets, $message, $my_db) {
 	    if ($stmt = $my_db->prepare('
@@ -414,6 +369,36 @@ class Manager {
 				'email' => $email,
 				'id_sujet' => $sujets,
 				'message' => $message
+			));
+		}
+	}
+
+	static function update_role_user($id, $role, $my_db) {
+
+		if ($stmt = $my_db->prepare('
+				UPDATE info_user
+                    SET role = :role
+                WHERE id = :id
+                
+			')) {
+			$stmt->execute(array(
+			    'id' => $id,
+				'role' => $role
+			));
+		}
+	}
+
+	static function update_type_user($id, $role, $my_db) {
+
+		if ($stmt = $my_db->prepare('
+				UPDATE info_user
+                    SET type_user = :type
+                WHERE id = :id
+                
+			')) {
+			$stmt->execute(array(
+			    'id' => $id,
+				'type' => $type
 			));
 		}
 	}
