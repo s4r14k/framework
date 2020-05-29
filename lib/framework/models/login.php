@@ -9,7 +9,7 @@ class Login {
 		$email = filter_var($email, FILTER_SANITIZE_STRING);
 
 		if ($req = $my_db->prepare('
-				SELECT u.id, u.email, u.pass, u.nom, u.prenom, u.role
+				SELECT u.id, u.email, u.pass, u.nom, u.prenom
 				FROM utilisateur u
 				WHERE u.email = :email
 				LIMIT 1 
