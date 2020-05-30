@@ -3,20 +3,34 @@ namespace framework\gestion;
 
 class Product {
 	static function get_number_max ($my_db) {
-		$id = $my_db->query('SELECT id As n_max FROM package ORDER BY id desc limit 1');
+		$id = $my_db->query('SELECT count(id) As n_max FROM products');
 		$values = $id->fetch();
 
 		return (int) $values['n_max'];
 	}
 
-	static function description ($courte, $longue, $my_db) {
+	static function set_id_product ($id, $id_product, $my_db) {
 		if ($stmt = $my_db->prepare('
-				INSERT INTO description (courte, longue)
-				VALUES (:courte, :longue)
+			UPDATE products 
+				SET id_product = :id_product
+				WHERE id = :id
+			')) {
+			$stmt->execute(array(
+				'id_product' => $id_product,
+				'id' => $id
+			));
+		}
+	}
+
+	static function set_description ($id, $courte, $my_db) {
+		if ($stmt = $my_db->prepare('
+			UPDATE products 
+				SET description = :courte
+				WHERE id = :id
 			')) {
 			$stmt->execute(array(
 				'courte' => $courte,
-				'longue' => $longue
+				'id' => $id
 			));
 		}
 	}
@@ -36,51 +50,38 @@ class Product {
 		}
 	}
 	
-	static function setPrice ($brut, $commission, $net, $my_db) {
+	static function setPrice ($id, $month, $year, $my_db) {
 
 		$net = filter_var($net, FILTER_VALIDATE_INT);
 		
 		if ($stmt = $my_db->prepare('
-				INSERT INTO prix (brut, commission, net)
-				VALUES (:brut, :commission, :net)
-
+			UPDATE products 
+				SET price_month = :month, price_year = :year
+				WHERE id = :id
 			')) {
 			$stmt->execute(array(
-				'brut' => $brut,
-				'commission' => $commission,
-				'net' => $net 
+				'id' => $id,
+				'month' => $month,
+				'year' => $year 
 			));
 		}
-    }
+	}
     
-    static function set_product ($nom, $id_fournisseur, $quantite, $date_creation, $id_categorie, $etat, $img1, $img2, $brut, $commission, $net, $my_db) {
-        $my_db->beginTransaction();
-        
-        self::image("produit", "", $img1, $img2, $my_db);
+    static function set_product ($id_product, $label, $price_month, $price_year, $description, $groupe, $my_db) {
 
-		$id_img = $my_db->query('SELECT id As id_image FROM gallerie_images ORDER BY id desc limit 1');
-        $image_id = $id_img->fetch();
-
-        self::setPrice($brut, $commission, $net, $my_db);
-        $id_prix = $my_db->query('SELECT id As id_prix FROM prix ORDER BY id desc limit 1');
-        $prix_id = $id_prix->fetch();
-
-        
 		$date_creation = date("Y/m/d");
 		if ($stmt = $my_db->prepare('
-				INSERT INTO produit (nom, id_fournisseur, quantite, date_creation, photo, id_categorie, id_prix, etat)
-				VALUES (:nom, :id_fournisseur, :quantite, :date_creation, :photo, :id_categorie, :id_prix, :etat)
-
+				INSERT INTO products (id_product, label, price_month, price_year, description, created, groupe)
+				VALUES (:id_product, :label, :price_month, :price_year, :description, :created, :groupe)
 			')) {
 			$stmt->execute(array(
-				'nom' => $nom,
-				'id_fournisseur' => $id_fournisseur,
-				'quantite' => $quantite,
-                'date_creation' => $date_creation,
-                'photo' => $image_id['id_image'],
-                'id_categorie' => $id_categorie,
-                'id_prix' => $prix_id['id_prix'],
-                'etat' => $etat
+				'id_product' => $id_product, 
+				'label' => $label, 
+				'price_month' => $price_month, 
+				'price_year' => $price_year, 
+				'description' => $description,	
+				'created' => $date_creation,
+				'groupe' => $groupe
                  
 			));
 		}
