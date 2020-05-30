@@ -53,19 +53,29 @@ class Product {
 	}
     
     static function set_product ($id_product, $label, $price_month, $price_year, $description, $groupe, $my_db) {
-
-		$date_creation = date("Y/m/d");
 		if ($stmt = $my_db->prepare('
-				INSERT INTO products (id_product, label, price_month, price_year, description, created, groupe)
-				VALUES (:id_product, :label, :price_month, :price_year, :description, :created, :groupe)
+				INSERT INTO products 
+					set id_product = :id_product, 
+						label = :label, 
+						price_month = :price_month, 
+						price_year = :price_year,
+						description = :description,
+						created = NOW(),
+						groupe = :groupe
+					ON DUPLICATE KEY UPDATE
+						label = :label, 
+						price_month = :price_month, 
+						price_year = :price_year,
+						description = :description,
+						created = NOW(),
+						groupe = :groupe
 			')) {
 			$stmt->execute(array(
 				'id_product' => $id_product, 
 				'label' => $label, 
 				'price_month' => $price_month, 
 				'price_year' => $price_year, 
-				'description' => $description,	
-				'created' => $date_creation,
+				'description' => $description,
 				'groupe' => $groupe
                  
 			));
@@ -75,7 +85,5 @@ class Product {
 		$stmt = "";
 		$id_prix = "";
 		$image_id = "";
-    }
-
-	
+	}	
 }
