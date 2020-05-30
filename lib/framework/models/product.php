@@ -2,7 +2,7 @@
 namespace framework\models;
 
 class Product {
-	static function get_number_max ($my_db) {
+	static function getNumberMax ($my_db) {
 		$id = $my_db->query('SELECT count(id) As n_max FROM products');
 		$values = $id->fetch();
 
