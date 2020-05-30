@@ -34,21 +34,6 @@ class Product {
 			));
 		}
 	}
-
-	static function image ($theme, $miniature, $img1, $img2, $my_db) {
-		if ($stmt = $my_db->prepare('
-				INSERT INTO gallerie_images (type, img_miniature, image1, image2)
-				VALUES (:theme, :miniature, :image1, :image2)
-
-			')) {
-			$stmt->execute(array(
-				'theme' => $theme,
-				'miniature' => $miniature,
-				'image1' => $img1,
-				'image2' => $img2 
-			));
-		}
-	}
 	
 	static function setPrice ($id, $month, $year, $my_db) {
 
