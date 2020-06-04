@@ -24,7 +24,7 @@ class Login {
                            
 			$_SESSION['email'] = $email;
 			
-			$_SESSION['role'] = $check['role'];
+			// $_SESSION['role'] = $check['role'];
 
 			$_SESSION['username'] = $check['nom'].' '.$check['prenom'];
                          

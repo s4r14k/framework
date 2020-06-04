@@ -98,20 +98,22 @@ class Manager {
 		}
     }
 
-    static function update_info_utilisateur ($id, $adress, $postal, $ville, $date_naissance, $my_db) {
+    static function update_info_utilisateur ($id, $adress, $country, $postal, $ville, $date_naissance, $period, $my_db) {
 
 		if ($stmt = $my_db->prepare('
 				INSERT INTO info_user
-				SET id_user = :id, adress = :adress, postal = :postal, ville = :ville, date_naissance = :date_naissance
-				ON DUPLICATE KEY UPDATE adress = :adress, postal = :postal, ville = :ville, date_naissance = :date_naissance
+				SET id_user = :id, adress = :adress, country = :country, postal = :postal, ville = :ville, date_naissance = :date_naissance, period = :period
+				ON DUPLICATE KEY UPDATE adress = :adress, country = :country, postal = :postal, ville = :ville, date_naissance = :date_naissance, period = :period
 
 			')) {
 			$stmt->execute(array(
 				'id' => $id,
 				'adress' => $adress,
+				'country' => $country,
 				'postal' => $postal,
 				'ville' => $ville,
-				'date_naissance' => $date_naissance
+				'date_naissance' => $date_naissance,
+				'period' => $period
 			));
 
 			$stmt = "";
@@ -120,13 +122,13 @@ class Manager {
 		}
     }
 
-    static function update_utilisateur ($id, $nom, $prenom, $email, $phone, $adress, $postal, $ville, $date_naissance, $img1, $my_db) {
+    static function update_utilisateur ($id, $nom, $prenom, $email, $phone, $adress, $country, $postal, $ville, $date_naissance, $period, $img1, $my_db) {
 
     	$my_db->beginTransaction();
 
     	self::add_image($id, $img1, $img1, $my_db);
 
-		self::update_info_utilisateur($id, $adress, $postal, $ville, $date_naissance, $my_db);
+		self::update_info_utilisateur($id, $adress, $country, $postal, $ville, $date_naissance, $period, $my_db);
 
 		if ($stmt = $my_db->prepare('
 				UPDATE utilisateur 
@@ -176,14 +178,14 @@ class Manager {
 		}
     }
 
-    static function set_stripe_customer ($id_user, $id_stripe, $my_db) {	
+    static function update_stripe_customer ($id_user, $id_stripe, $my_db) {	
 		
-	$my_db->beginTransaction();
+		$my_db->beginTransaction();
 
-	self::update_is_pay($id_user, $my_db);
-	
-	$id_user = filter_var($id_user, FILTER_VALIDATE_INT);
-	$id_stripe = filter_var($id_stripe, FILTER_SANITIZE_STRING);
+		self::update_is_pay($id_user, $my_db);
+		
+		$id_user = filter_var($id_user, FILTER_VALIDATE_INT);
+		$id_stripe = filter_var($id_stripe, FILTER_SANITIZE_STRING);
 
 		if ($stmt = $my_db->prepare('
 				INSERT INTO stripe 
@@ -250,9 +252,24 @@ class Manager {
 			));
 			return true;
 		}
-    }
+	}
+	
+	static function set_societe ($id_user, $nom, $my_db) {
 
-	static function set_client_admin ($nom, $prenom, $email, $phone, $pass, $role, $img1, $img2, $my_db) {
+		if ($stmt = $my_db->prepare('
+				INSERT INTO societe
+				SET id_client = :id_client, nom = :nom
+				ON DUPLICATE KEY UPDATE nom = :nom
+
+			')) {
+			$stmt->execute(array(
+				'id_client' => $id_user,
+				'nom' => $nom,
+			));
+		}
+	}
+
+	static function set_client_admin ($nom, $prenom, $email, $phone, $pass, $role, $country, $period, $company, $img1, $img2, $my_db) {
 
 		$my_db->beginTransaction();
 
@@ -265,9 +282,14 @@ class Manager {
 		
 		$user = $my_db->query('SELECT id FROM utilisateur ORDER BY id desc limit 1');
 		$retour = $user->fetch();
-		self::update_info_utilisateur($retour['id'], "", "", "", "00:00:0000", $my_db);
+
+		// ($id, $adress, $country, $postal, $ville, $date_naissance, $period, $my_db)
+		self::update_info_utilisateur($retour['id'], "", $country, "", "", "00:00:0000", $period, $my_db);
+
+		self::set_societe($retour['id'], $company, $my_db);
 
 		$my_db->commit();
+
 		$stmt = "";
 		$id_user = "";
 		$image_id = "";
