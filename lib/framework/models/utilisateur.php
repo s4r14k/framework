@@ -22,6 +22,25 @@ class Utilisateur {
 		}
 	}
 
+	static function getAllUserByClient($id_client, $my_db) {
+
+		if ($req = $my_db->prepare('
+			SELECT u.id, u.nom, u.prenom, u.email, u.phone, u.user_registerd, i.role, i.team, i.status
+				FROM utilisateur u
+			LEFT JOIN info_user i ON i.id_user = u.id
+				WHERE i.id_client = :id_client AND i.type_user = 4000
+				ORDER BY u.id DESC
+		')) {
+			$req->bindParam('id_client', $id_client);
+			$req->execute();
+
+			$result = $req->fetchAll(\PDO::FETCH_ASSOC);
+			return $result;
+		} else {
+			return "ERROR";
+		}
+	}
+
 	static function getUser($id_user, $my_db) {
 
 		$id_user = filter_var($id_user, FILTER_SANITIZE_STRING);
