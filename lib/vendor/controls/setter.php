@@ -28,6 +28,10 @@ class Setter extends \framework\gestion\manager {
 	function set ($image1, $image2, $my_db) {
 		return self::set_client_admin($this->_nom, $this->_prenom, $this->_email, $this->_phone, $this->_pass, $this->_role, $this->_country, $this->_period, $this->_company, $image1, $image2, $my_db);
 	}
+
+	function set_utilisateur ($timezone, $status, $team, $idClient, $image1, $image2, $my_db) {
+		return self::set_client_user($this->_nom, $this->_prenom, $this->_email, $this->_phone, $this->_pass, $this->_role, $this->_country, $timezone, $status, $team, $idClient, $image1, $image2, $my_db);
+	}
 	
 	function facture ($nom, $link, $titulaire, $validation, $etat, $my_db, $ref) {
 		self::set_facture($nom, $link, $titulaire, $validation, $etat, $my_db, $ref);

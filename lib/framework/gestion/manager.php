@@ -120,6 +120,35 @@ class Manager {
 			$id_user = "";
 			$image_id = "";
 		}
+	}
+
+	static function update_info_utilisateur_client ($id, $status, $country, $role, $type_user, $timezone, $id_client, $team, $my_db) {
+
+		if(empty($type_user)) {
+			$type_user = "0";
+		}
+
+		if ($stmt = $my_db->prepare('
+				INSERT INTO info_user
+				SET id_user = :id, status = :status, country = :country, role = :role, type_user = :type_user, timezone = :timezone, id_client = :id_client, team = :team 
+				ON DUPLICATE KEY UPDATE status = :status, country = :country, role = :role, type_user = :type_user, timezone = :timezone, id_client = :id_client, team = :team
+
+			')) {
+			$stmt->execute(array(
+				'id' => $id,
+				'status' => $status,
+				'country' => $country,
+				'role' => $role,
+				'type_user' => $type_user,
+				'timezone' => $timezone,
+				'id_client' => $id_client,
+				'team' => $team
+			));
+
+			$stmt = "";
+			$id_user = "";
+			$image_id = "";
+		}
     }
 
     static function update_utilisateur ($id, $nom, $prenom, $email, $phone, $adress, $country, $postal, $ville, $date_naissance, $period, $img1, $my_db) {
@@ -287,6 +316,34 @@ class Manager {
 		self::update_info_utilisateur($retour['id'], "", $country, "", "", "00:00:0000", $period, $my_db);
 
 		self::set_societe($retour['id'], $company, $my_db);
+
+		$my_db->commit();
+
+		$stmt = "";
+		$id_user = "";
+		$image_id = "";
+
+
+		return true;
+
+	}
+
+	static function set_client_user($nom, $prenom, $email, $phone, $pass, $role, $country, $timezone, $status, $team, $id_client, $img1, $img2, $my_db) {
+
+		$my_db->beginTransaction();
+
+		// self::image($img1, $img2, $my_db);
+
+		// $id_img = $my_db->query('SELECT id As id_image FROM gallerie_images ORDER BY id desc limit 1');
+        // $image_id = $id_img->fetch();
+        
+        self::set_utilisateur($nom, $prenom, $email, $phone, $pass, $my_db);
+		
+		$user = $my_db->query('SELECT id FROM utilisateur ORDER BY id desc limit 1');
+		$retour = $user->fetch();
+
+		// ($id, $status, $country, $role, $type_user, $timezone, $id_client, $my_db)
+		self::update_info_utilisateur_client($retour['id'], $status, $country, $role, 4000, $timezone, $id_client, $team, $my_db);
 
 		$my_db->commit();
 
