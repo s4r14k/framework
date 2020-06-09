@@ -283,22 +283,24 @@ class Manager {
 		}
 	}
 	
-	static function set_societe ($id_user, $nom, $my_db) {
+	static function set_societe ($id_user, $nom, $pack, $users, $nbuser, $my_db) {
 
 		if ($stmt = $my_db->prepare('
 				INSERT INTO societe
-				SET id_client = :id_client, nom = :nom
-				ON DUPLICATE KEY UPDATE nom = :nom
-
+				SET id_client = :id_client, nom = :nom, pack = :pack, users = :users, nbuser = :nbuser
+				ON DUPLICATE KEY UPDATE nom = :nom, pack = :pack, users = :users, nbuser = :nbuser
 			')) {
 			$stmt->execute(array(
 				'id_client' => $id_user,
 				'nom' => $nom,
+				'pack' => $pack,
+				'users' => $users,
+				'nbuser' => $nbuser
 			));
 		}
 	}
 
-	static function set_client_admin ($nom, $prenom, $email, $phone, $pass, $role, $country, $period, $company, $img1, $img2, $my_db) {
+	static function set_client_admin ($nom, $prenom, $email, $phone, $pass, $role, $country, $period, $company, $pack, $nbuser, $img1, $img2, $my_db) {
 
 		$my_db->beginTransaction();
 
@@ -315,7 +317,8 @@ class Manager {
 		// ($id, $adress, $country, $postal, $ville, $date_naissance, $period, $my_db)
 		self::update_info_utilisateur($retour['id'], "", $country, "", "", "00:00:0000", $period, $my_db);
 
-		self::set_societe($retour['id'], $company, $my_db);
+		// ($id_user, $nom, $pack, $users, $nbuser, $my_db)
+		self::set_societe($retour['id'], $company, $pack, 0, $nbuser, $my_db);
 
 		$my_db->commit();
 

@@ -22,11 +22,10 @@ class Setter extends \framework\gestion\manager {
 		$this->_country = filter_var($country, FILTER_SANITIZE_STRING);
 		$this->_period = filter_var($period, FILTER_VALIDATE_INT);
 		$this->_company = filter_var($company, FILTER_SANITIZE_STRING);
-
 	}
 	
-	function set ($image1, $image2, $my_db) {
-		return self::set_client_admin($this->_nom, $this->_prenom, $this->_email, $this->_phone, $this->_pass, $this->_role, $this->_country, $this->_period, $this->_company, $image1, $image2, $my_db);
+	function set ($pack, $nbuser, $image1, $image2, $my_db) {
+		return self::set_client_admin($this->_nom, $this->_prenom, $this->_email, $this->_phone, $this->_pass, $this->_role, $this->_country, $this->_period, $this->_company, $pack, $nbuser, $image1, $image2, $my_db);
 	}
 
 	function set_utilisateur ($timezone, $status, $team, $idClient, $image1, $image2, $my_db) {
