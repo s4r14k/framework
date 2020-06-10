@@ -247,6 +247,29 @@ class Manager {
 		} else {
 			return false;
 		}
+	}
+	
+	static function update_users_client ($id_client, $nb, $my_db) {
+
+		$id_client = filter_var($id_client, FILTER_VALIDATE_INT);
+		$nb = filter_var($nb, FILTER_VALIDATE_INT);
+
+		$nb += 1;
+
+		if ($stmt = $my_db->prepare('
+				UPDATE societe 
+				SET users = :nb
+				WHERE id_client = :id_client
+			')) {
+			$stmt->execute(array(
+				'id_client' => $id_client,
+				'nb' => $nb
+			));
+
+			return true;
+		} else {
+			return false;
+		}
     }
 
     static function update_validation_facture ($id, $validation, $my_db) {
@@ -331,7 +354,7 @@ class Manager {
 
 	}
 
-	static function set_client_user($nom, $prenom, $email, $phone, $pass, $role, $country, $timezone, $status, $team, $id_client, $img1, $img2, $my_db) {
+	static function set_client_user($nom, $prenom, $email, $phone, $pass, $role, $country, $timezone, $status, $team, $id_client, $users, $img1, $img2, $my_db) {
 
 		$my_db->beginTransaction();
 
@@ -347,6 +370,8 @@ class Manager {
 
 		// ($id, $status, $country, $role, $type_user, $timezone, $id_client, $my_db)
 		self::update_info_utilisateur_client($retour['id'], $status, $country, $role, 4000, $timezone, $id_client, $team, $my_db);
+
+		self::update_users_client($id_client, $users, $my_db);
 
 		$my_db->commit();
 
