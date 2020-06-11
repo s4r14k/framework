@@ -22,6 +22,24 @@ class Utilisateur {
 		}
 	}
 
+	static function getTeamByClient($id_client, $my_db) {
+
+		if ($req = $my_db->prepare('
+			SELECT team
+				FROM societe
+			WHERE id_client = :id_client
+			LIMIT 1
+		')) {
+			$req->bindParam('id_client', $id_client);
+			$req->execute();
+
+			$result = $req->fetch(\PDO::FETCH_ASSOC);
+			return $result;
+		} else {
+			return "ERROR";
+		}
+	}
+
 	static function getAllUserByClient($id_client, $my_db) {
 
 		if ($req = $my_db->prepare('

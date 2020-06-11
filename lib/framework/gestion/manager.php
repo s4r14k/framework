@@ -510,35 +510,21 @@ class Manager {
 		}
 	}
 	
-	static function update_commercial ($id, $nom, $prenom, $pass, $image, $my_db) {
-	    $my_db->beginTransaction();
-	    
-	    if ($stmt = $my_db->prepare('
-				UPDATE utilisateur
-                    SET nom = :nom, prenom = :prenom, pass = :pass
-                WHERE id = :id
+	static function update_team_client($id, $team, $my_db) {
+
+		if ($stmt = $my_db->prepare('
+				UPDATE societe
+                    SET team = :team
+                WHERE id_client = :id
                 
 			')) {
 			$stmt->execute(array(
 			    'id' => $id,
-				'nom' => $nom,
-				'prenom' => $prenom,
-				'pass' => $pass
+				'team' => $team
 			));
+			return array("response" =>"success");
 		}
-		
-		if ($stmt = $my_db->prepare('
-				UPDATE gallerie_images
-                    SET image1 = :image
-                WHERE id = :id
-                
-			')) {
-			$stmt->execute(array(
-				'id' => $id,
-				'image' => $image
-			));
-		}
-		
-		$my_db->commit();
+
+		return array("response" => "failed");
 	}
 }
