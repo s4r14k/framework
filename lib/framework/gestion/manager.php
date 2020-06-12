@@ -205,29 +205,27 @@ class Manager {
 				'id' => $id,
 			));
 		}
-    }
+	}
 
-    static function update_stripe_customer ($id_user, $id_stripe, $my_db) {	
-		
-		$my_db->beginTransaction();
-
-		self::update_is_pay($id_user, $my_db);
+    static function update_stripe_customer ($id_user, $token, $customer, $card, $coupon, $id_product, $id_price, $my_db) {
 		
 		$id_user = filter_var($id_user, FILTER_VALIDATE_INT);
-		$id_stripe = filter_var($id_stripe, FILTER_SANITIZE_STRING);
 
 		if ($stmt = $my_db->prepare('
 				INSERT INTO stripe 
-				SET id = :id_utilisateur, id_stripe = :id_stripe, date_ajout = NOW()
-				ON DUPLICATE KEY UPDATE id_stripe = :id_stripe, date_ajout = NOW()
+				SET id_user = :id_utilisateur, token = :token, customer = :customer, card = :card, coupon = :coupon, id_product = :id_product, id_price = :id_price, date_ajout = NOW()
+				ON DUPLICATE KEY UPDATE token = :token, customer = :customer, card = :card, coupon = :coupon, id_product = :id_product, id_price = :id_price
 
 			')) {
 			$stmt->execute(array(
 				'id_utilisateur' => $id_user,
-				'id_stripe' => $id_stripe,
+				'token' => $token,
+				'customer' => $customer,
+				'card' => $card,
+				'coupon' => $coupon,
+				'id_product' => $id_product,
+				'id_price' => $id_price,
 			));
-			
-			$my_db->commit();
 		}
     }
 
@@ -350,7 +348,7 @@ class Manager {
 		$image_id = "";
 
 
-		return true;
+		return $retour['id'];
 
 	}
 

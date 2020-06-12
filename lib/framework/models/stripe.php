@@ -25,6 +25,26 @@ class Stripe {
 			return "ERROR";
 		}
 	}
+
+	static function getStripePriceByUser($id_user, $my_db) {
+
+		$id_user = filter_var($id_user, FILTER_VALIDATE_INT);
+
+		if ($req = $my_db->prepare('
+				SELECT s.id_price
+				FROM stripe s
+				WHERE s.id_user = :id_user
+				LIMIT 1 
+			')) {
+			$req->bindParam('id_user', $id_user);
+			$req->execute();
+
+			$result = $req->fetch(\PDO::FETCH_ASSOC);
+			return $result['id_price'];
+		} else {
+			return "ERROR";
+		}
+	}
 	
 	static function isPay($id_user, $my_db) {
 
