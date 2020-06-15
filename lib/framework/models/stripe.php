@@ -31,7 +31,7 @@ class Stripe {
 		$id_user = filter_var($id_user, FILTER_VALIDATE_INT);
 
 		if ($req = $my_db->prepare('
-				SELECT s.id_price
+				SELECT s.id_price, s.subscription
 				FROM stripe s
 				WHERE s.id_user = :id_user
 				LIMIT 1 
@@ -40,7 +40,7 @@ class Stripe {
 			$req->execute();
 
 			$result = $req->fetch(\PDO::FETCH_ASSOC);
-			return $result['id_price'];
+			return $result;
 		} else {
 			return "ERROR";
 		}
