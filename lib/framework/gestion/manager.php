@@ -231,19 +231,22 @@ class Manager extends \framework\gestion\update {
 		}
     }
 
-    static function update_pass ($email, $pass, $my_db) {
+    static function update_pass ($id_user, $email, $pass, $my_db) {
+
+		$id_user = filter_var($id_user, FILTER_VALIDATE_INT);
 
 		if ($stmt = $my_db->prepare('
 				UPDATE utilisateur 
 				SET pass = :pass
-				WHERE email = :email
+				WHERE email = :email AND id = :id
 			')) {
 			$stmt->execute(array(
+				'id' => $id_user,
 				'email' => $email,
 				'pass' => $pass
 			));
 
-			return true;
+			return array("valid" => true, "body" => "password updated successffully");
 		} else {
 			return false;
 		}
