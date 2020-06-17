@@ -1,7 +1,8 @@
 <?php
 namespace framework\gestion;
 
-class Manager {
+class Manager extends \framework\gestion\update {
+
 	static function get_number_max ($my_db) {
 		$id = $my_db->query('SELECT id As n_max FROM package ORDER BY id desc limit 1');
 		$values = $id->fetch();
