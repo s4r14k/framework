@@ -9,9 +9,10 @@ class Login {
 		$email = filter_var($email, FILTER_SANITIZE_STRING);
 
 		if ($req = $my_db->prepare('
-				SELECT u.id, u.email, u.pass, u.nom, u.prenom, s.nom AS nomsoc, s.team, s.pack, s.users, s.nbuser
+				SELECT u.id, u.email, u.pass, u.nom, u.prenom, s.nom AS nomsoc, s.description, s.team, s.pack, s.users, s.nbuser, i.type_user
 				FROM utilisateur u
 				LEFT JOIN societe s ON u.id = s.id_client
+				LEFT JOIN info_user i On i.id_user = u.id
 				WHERE u.email = :email
 				LIMIT 1 
 			')) {

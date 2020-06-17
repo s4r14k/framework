@@ -10,7 +10,7 @@ class Login {
 		if((password_verify($password, $check['pass']) === true) and ($email == $check['email'])) {
 			
 			// Get the user-agent string of the user
-			$user_browser = $_SERVER['HTTP_USER_AGENT'];
+			// $user_browser = $_SERVER['HTTP_USER_AGENT'];
             
             // XSS protection as we might print this value
             $user_id = preg_replace("/[^0-9]+/", "", $check['id']);
