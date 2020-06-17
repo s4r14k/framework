@@ -527,4 +527,22 @@ class Manager extends \framework\gestion\update {
 
 		return array("response" => "failed");
 	}
+
+	static function update_company ($id, $nom, $prenom, $position, $adress, $city, $country, $postal, $description, $my_db) {
+
+		$my_db->beginTransaction();
+		
+		self::update_nom_utilisateur($id, $nom, $my_db);
+		self::update_prenom_utilisateur($id, $prenom, $my_db);
+		self::update_position_societe($id, $position, $my_db);
+		self::update_description_societe($id, $description, $my_db);
+		self::update_adress_info_user($id, $adress, $my_db);
+		self::update_ville_info_user($id, $city, $my_db);
+		self::update_country_info_user($id, $country, $my_db);
+		self::update_postal_info_user($id, $postal, $my_db);
+
+		$my_db->commit();
+		
+		return array("response" =>"success");
+    }
 }

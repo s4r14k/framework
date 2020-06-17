@@ -15,6 +15,20 @@ class Update {
                 'nom' => $nom
 			));
 		}
+	}
+	
+	static function update_position_societe ($id, $position, $my_db) {
+
+		if ($stmt = $my_db->prepare('
+				UPDATE societe 
+				SET position = :position
+				WHERE id_client = :id
+			')) {
+			$stmt->execute(array(
+                'id' => $id,
+                'position' => $position
+			));
+		}
     }
     
     static function update_description_societe ($id, $description, $my_db) {
