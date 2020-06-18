@@ -12,7 +12,9 @@ class Delete {
 			$stmt->execute(array(
                 'id' => $id
 			));
+			return true;
 		}
+		return false;
     }
 
     static function delete_from_info_user ($id, $my_db) {
@@ -24,7 +26,11 @@ class Delete {
 			$stmt->execute(array(
                 'id' => $id
 			));
+
+			return true;
 		}
+
+		return false;
     }
     
     static function delete_users_client_from_info_user ($id, $my_db) {
@@ -36,7 +42,10 @@ class Delete {
 			$stmt->execute(array(
                 'id' => $id
 			));
+			return true;
 		}
+
+		return false;
     }
     
     static function delete_from_stripe ($id, $my_db) {
@@ -48,7 +57,9 @@ class Delete {
 			$stmt->execute(array(
                 'id' => $id
 			));
+			return true;
 		}
+		return false;
 	}
     
     static function delete_from_societe ($id, $my_db) {
@@ -60,6 +71,9 @@ class Delete {
 			$stmt->execute(array(
                 'id' => $id
 			));
+			return true;
 		}
+
+		return false;
 	}
 }
