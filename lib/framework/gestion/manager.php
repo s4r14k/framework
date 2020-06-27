@@ -208,14 +208,14 @@ class Manager extends \framework\gestion\update {
 		}
 	}
 
-    static function update_stripe_customer ($id_user, $token, $customer, $subscription, $card, $coupon, $id_product, $id_price, $my_db) {
+    static function update_stripe_customer ($id_user, $token, $customer, $subscription, $card, $coupon, $id_product, $id_price, $id_taxe, $my_db) {
 		
 		$id_user = filter_var($id_user, FILTER_VALIDATE_INT);
 
 		if ($stmt = $my_db->prepare('
 				INSERT INTO stripe 
-				SET id_user = :id_utilisateur, token = :token, customer = :customer, subscription = :subscription, card = :card, coupon = :coupon, id_product = :id_product, id_price = :id_price, date_ajout = NOW()
-				ON DUPLICATE KEY UPDATE token = :token, customer = :customer,  subscription = :subscription, card = :card, coupon = :coupon, id_product = :id_product, id_price = :id_price
+				SET id_user = :id_utilisateur, token = :token, customer = :customer, subscription = :subscription, card = :card, coupon = :coupon, id_product = :id_product, id_price = :id_price, id_taxe = :id_taxe, date_ajout = NOW()
+				ON DUPLICATE KEY UPDATE token = :token, customer = :customer,  subscription = :subscription, card = :card, coupon = :coupon, id_product = :id_product, id_price = :id_price, id_taxe = :id_taxe
 
 			')) {
 			$stmt->execute(array(
@@ -227,6 +227,7 @@ class Manager extends \framework\gestion\update {
 				'coupon' => $coupon,
 				'id_product' => $id_product,
 				'id_price' => $id_price,
+				'id_taxe' => $id_taxe
 			));
 		}
     }
