@@ -9,10 +9,27 @@ class Utilisateur {
 	static function getAllUser($my_db) {
 
 		if ($req = $my_db->query('
-				SELECT u.id, u.nom, u.prenom, u.email, u.phone, i.membre, c.is_confirm
+				SELECT u.id, u.nom, u.prenom, u.email, u.phone, i.status
 				FROM utilisateur u
 				LEFT JOIN info_user i ON i.id_user = u.id
-				LEFT JOIN confirmation c ON c.id_user = u.id
+				ORDER BY u.id DESC
+			')) {
+			$result = $req->fetchAll(\PDO::FETCH_ASSOC);
+			return $result;
+		} else {
+			return "ERROR";
+		}
+	}
+
+	static function getAllClient($my_db) {
+
+		if ($req = $my_db->query('
+				SELECT u.id, u.nom, u.prenom, u.email, u.phone, i.status, i.is_client, s.id_price, u.user_registerd, c.nom as nomsoc, c.position, c.pack
+					FROM utilisateur u
+				INNER JOIN info_user i ON i.id_user = u.id
+				INNER JOIN stripe s ON s.id_user = u.id
+				INNER JOIN societe c ON c.id_client = u.id
+				WHERE i.type_user = 0
 				ORDER BY u.id DESC
 			')) {
 			$result = $req->fetchAll(\PDO::FETCH_ASSOC);
