@@ -269,6 +269,20 @@ class Update {
 			));
 		}
 	}
+
+	static function update_team_by_name_info_user ($old, $team, $my_db) {
+
+		if ($stmt = $my_db->prepare('
+				UPDATE info_user 
+				SET team = :team
+				WHERE team = :old
+			')) {
+			$stmt->execute(array(
+                'old' => $old,
+                'team' => $team
+			));
+		}
+	}
 	
 	static function update_timezone_info_user ($id, $timezone, $my_db) {
 
