@@ -101,12 +101,11 @@ class Utilisateur {
 		$id_user = filter_var($id_user, FILTER_SANITIZE_STRING);
 
 		if ($req = $my_db->prepare('
-				SELECT u.id, u.nom, u.prenom, u.email, u.phone, g.image1, i.adress, i.postal, i.ville, i.date_naissance, i.membre, i.is_pay
+				SELECT u.id, u.nom, u.prenom, u.email, u.phone,
+					i.role, i.country, i.status,
+					i.adress, i.postal, i.ville, i.date_naissance
 				FROM utilisateur u
-				LEFT JOIN info_user i
-				ON i.id_user = u.id
-				LEFT JOIN gallerie_images g
-				ON g.id_user = u.id
+				LEFT JOIN info_user i ON i.id_user = u.id
 				WHERE u.id = :id_user
 				LIMIT 1 
 			')) {
