@@ -60,8 +60,9 @@ class Utilisateur {
 	static function getAllUserByClient($id_client, $my_db) {
 
 		if ($req = $my_db->prepare('
-			SELECT u.id, u.nom, u.prenom, u.email, u.phone, u.user_registerd, i.role, i.team, i.status
+			SELECT u.id, u.nom, u.prenom, u.email, u.phone, u.user_registerd, i.role, i.team, i.status, g.url
 				FROM utilisateur u
+			LEFT JOIN gallerie_images g ON g.id_user = u.id
 			LEFT JOIN info_user i ON i.id_user = u.id
 				WHERE i.id_client = :id_client AND i.type_user = 4000
 				ORDER BY u.id DESC
@@ -101,11 +102,12 @@ class Utilisateur {
 		$id_user = filter_var($id_user, FILTER_SANITIZE_STRING);
 
 		if ($req = $my_db->prepare('
-				SELECT u.id, u.nom, u.prenom, u.email, u.phone,
-					i.role, i.country, i.status,
-					i.adress, i.postal, i.ville, i.date_naissance
+				SELECT u.id, u.nom, u.prenom, u.email, u.phone, i.team,
+					i.role, i.country, i.status, i.timezone, i.quota, i.langue,
+					i.adress, i.postal, i.ville, i.date_naissance, g.url
 				FROM utilisateur u
 				LEFT JOIN info_user i ON i.id_user = u.id
+				LEFT JOIN gallerie_images g ON g.id_user = u.id
 				WHERE u.id = :id_user
 				LIMIT 1 
 			')) {

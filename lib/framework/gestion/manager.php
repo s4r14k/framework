@@ -35,17 +35,16 @@ class Manager extends \framework\gestion\update {
 		}
 	}
 
-	static function add_image ($id, $img1, $img2, $my_db) {
+	static function add_image ($id, $url, $my_db) {
 		if ($stmt = $my_db->prepare('
 				INSERT INTO gallerie_images
-				SET id_user = :id, image1 = :image1, image2 = :image2, date = NOW()
-				ON DUPLICATE KEY UPDATE image1 = :image1, image2 = :image2, date = NOW()
+				SET id_user = :id_user, url = :url
+				ON DUPLICATE KEY UPDATE url = :url
 
 			')) {
 			$stmt->execute(array(
-				'id' => $id,
-				'image1' => $img1,
-				'image2' => $img2 
+				'id_user' => $id,
+				'url' => $url,
 			));
 		}
 	}
@@ -123,7 +122,7 @@ class Manager extends \framework\gestion\update {
 		}
 	}
 
-	static function update_info_utilisateur_client ($id, $status, $country, $role, $type_user, $timezone, $id_client, $team, $my_db) {
+	static function update_info_utilisateur_client ($id, $status, $country, $role, $type_user, $timezone, $id_client, $team, $langue, $quota, $my_db) {
 
 		if(empty($type_user)) {
 			$type_user = "0";
@@ -131,8 +130,8 @@ class Manager extends \framework\gestion\update {
 
 		if ($stmt = $my_db->prepare('
 				INSERT INTO info_user
-				SET id_user = :id, status = :status, country = :country, role = :role, type_user = :type_user, timezone = :timezone, id_client = :id_client, team = :team 
-				ON DUPLICATE KEY UPDATE status = :status, country = :country, role = :role, type_user = :type_user, timezone = :timezone, id_client = :id_client, team = :team
+				SET id_user = :id, status = :status, country = :country, role = :role, type_user = :type_user, timezone = :timezone, id_client = :id_client, team = :team, langue = :langue, quota = :quota
+				ON DUPLICATE KEY UPDATE status = :status, country = :country, role = :role, type_user = :type_user, timezone = :timezone, id_client = :id_client, team = :team, langue = :langue, quota = :quota
 
 			')) {
 			$stmt->execute(array(
@@ -143,7 +142,9 @@ class Manager extends \framework\gestion\update {
 				'type_user' => $type_user,
 				'timezone' => $timezone,
 				'id_client' => $id_client,
-				'team' => $team
+				'team' => $team,
+				'langue' => $langue,
+				'quota' => $quota
 			));
 
 			$stmt = "";
@@ -358,7 +359,7 @@ class Manager extends \framework\gestion\update {
 
 	}
 
-	static function set_client_user($nom, $prenom, $email, $phone, $pass, $role, $country, $timezone, $status, $team, $id_client, $users, $img1, $img2, $my_db) {
+	static function set_client_user($nom, $prenom, $email, $phone, $pass, $role, $country, $timezone, $status, $team, $id_client, $users, $img1, $langue, $quota, $my_db) {
 
 		$my_db->beginTransaction();
 
@@ -373,9 +374,39 @@ class Manager extends \framework\gestion\update {
 		$retour = $user->fetch();
 
 		// ($id, $status, $country, $role, $type_user, $timezone, $id_client, $my_db)
-		self::update_info_utilisateur_client($retour['id'], $status, $country, $role, 4000, $timezone, $id_client, $team, $my_db);
+		self::update_info_utilisateur_client($retour['id'], $status, $country, $role, 4000, $timezone, $id_client, $team, $langue, $quota, $my_db);
 
 		self::update_users_client($id_client, $users, $my_db);
+
+		if($img1) {
+			self::add_image($retour['id'], $img1, $my_db);
+		}
+
+		$my_db->commit();
+
+		$stmt = "";
+		$id_user = "";
+		$image_id = "";
+
+
+		return true;
+
+	}
+
+	static function update_client_user($id, $nom, $prenom, $email, $phone, $pass, $role, $country, $timezone, $status, $team, $id_client, $users, $img1, $langue, $quota, $my_db) {
+
+		$my_db->beginTransaction();
+		
+		self::update_nom_utilisateur($id, $nom, $my_db);
+		self::update_prenom_utilisateur($id, $prenom, $my_db);
+		self::update_email_utilisateur($id, $email, $my_db);
+		self::update_phone_utilisateur($id, $phone, $my_db);
+
+		// ($id, $status, $country, $role, $type_user, $timezone, $id_client, $my_db)
+		self::update_info_utilisateur_client($id, $status, $country, $role, 4000, $timezone, $id_client, $team, $langue, $quota, $my_db);
+		if($img1) {
+			self::add_image($id, $img1, $my_db);
+		}
 
 		$my_db->commit();
 
