@@ -396,30 +396,16 @@ class Update {
 		}
 	}
 
-	static function update_id_add_price_month_stripe ($id, $id_add_price_month, $my_db) {
+	static function update_id_add_price_stripe ($id, $id_add_price, $my_db) {
 
 		if ($stmt = $my_db->prepare('
 				UPDATE stripe 
-				SET id_add_price_month = :id_add_price_month
+				SET id_add_price = :id_add_price
 				WHERE id_user = :id
 			')) {
 			$stmt->execute(array(
                 'id' => $id,
-                'id_price' => $id_price
-			));
-		}
-	}
-
-	static function update_id_add_price_year_stripe ($id, $id_add_price_year, $my_db) {
-
-		if ($stmt = $my_db->prepare('
-				UPDATE stripe 
-				SET id_add_price_year = :id_add_price_year
-				WHERE id_user = :id
-			')) {
-			$stmt->execute(array(
-                'id' => $id,
-                'id_add_price_year' => $id_add_price_year
+                'id_add_price' => $id_add_price
 			));
 		}
 	}
