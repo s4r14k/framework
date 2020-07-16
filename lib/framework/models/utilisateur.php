@@ -26,13 +26,33 @@ class Utilisateur {
 		if ($req = $my_db->query('
 				SELECT u.id, u.nom, u.prenom, u.email, u.phone, i.status, i.is_client, s.id_price, u.user_registerd, c.nom as nomsoc, c.position, c.pack
 					FROM utilisateur u
-				INNER JOIN info_user i ON i.id_user = u.id
-				INNER JOIN stripe s ON s.id_user = u.id
-				INNER JOIN societe c ON c.id_client = u.id
+				LEFT JOIN info_user i ON i.id_user = u.id
+				LEFT JOIN stripe s ON s.id_user = u.id
+				LEFT JOIN societe c ON c.id_client = u.id
 				WHERE i.type_user = 0
 				ORDER BY u.id DESC
 			')) {
 			$result = $req->fetchAll(\PDO::FETCH_ASSOC);
+			return $result;
+		} else {
+			return "ERROR";
+		}
+	}
+
+	static function getClientById($id, $my_db) {
+
+		if ($req = $my_db->prepare('
+				SELECT u.id, u.nom, u.prenom, u.email, u.phone, i.status, i.is_client, s.id_price, u.user_registerd, c.nom as nomsoc, c.position, c.pack
+					FROM utilisateur u
+				LEFT JOIN info_user i ON i.id_user = u.id
+				LEFT JOIN stripe s ON s.id_user = u.id
+				LEFT JOIN societe c ON c.id_client = u.id
+				WHERE i.type_user = 0 AND u.id = :id
+				ORDER BY u.id DESC
+			')) {
+			$req->bindParam('id', $id);
+			$req->execute();
+			$result = $req->fetch(\PDO::FETCH_ASSOC);
 			return $result;
 		} else {
 			return "ERROR";
