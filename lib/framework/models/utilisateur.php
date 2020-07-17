@@ -24,11 +24,12 @@ class Utilisateur {
 	static function getAllClient($my_db) {
 
 		if ($req = $my_db->query('
-				SELECT u.id, u.nom, u.prenom, u.email, u.phone, i.status, i.is_client, s.id_price, u.user_registerd, c.nom as nomsoc, c.position, c.pack
+				SELECT u.id, u.nom, u.prenom, u.email, u.phone, i.status, i.is_client, s.id_price, u.user_registerd, c.nom as nomsoc, c.position, c.pack, g.url
 					FROM utilisateur u
 				LEFT JOIN info_user i ON i.id_user = u.id
 				LEFT JOIN stripe s ON s.id_user = u.id
 				LEFT JOIN societe c ON c.id_client = u.id
+				LEFT JOIN gallerie_images g ON g.id_user = u.id
 				WHERE i.type_user = 0
 				ORDER BY u.id DESC
 			')) {
@@ -42,11 +43,12 @@ class Utilisateur {
 	static function getClientById($id, $my_db) {
 
 		if ($req = $my_db->prepare('
-				SELECT u.id, u.nom, u.prenom, u.email, u.phone, i.status, i.is_client, s.id_price, u.user_registerd, c.nom as nomsoc, c.position, c.pack
+				SELECT u.id, u.nom, u.prenom, u.email, u.phone, i.status, i.is_client, s.id_price, u.user_registerd, c.nom as nomsoc, c.position, c.pack, c.nbuser, g.url
 					FROM utilisateur u
 				LEFT JOIN info_user i ON i.id_user = u.id
 				LEFT JOIN stripe s ON s.id_user = u.id
 				LEFT JOIN societe c ON c.id_client = u.id
+				LEFT JOIN gallerie_images g ON g.id_user = u.id
 				WHERE i.type_user = 0 AND u.id = :id
 				ORDER BY u.id DESC
 			')) {
