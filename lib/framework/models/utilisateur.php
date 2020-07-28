@@ -9,7 +9,7 @@ class Utilisateur {
 	static function getAllUser($my_db) {
 
 		if ($req = $my_db->query('
-				SELECT u.id, u.nom, u.prenom, u.email, u.phone, i.status
+				SELECT u.id, u.id_api, u.nom, u.prenom, u.email, u.phone, i.status
 				FROM utilisateur u
 				LEFT JOIN info_user i ON i.id_user = u.id
 				ORDER BY u.id DESC
@@ -24,7 +24,7 @@ class Utilisateur {
 	static function getAllClient($my_db) {
 
 		if ($req = $my_db->query('
-				SELECT u.id, u.nom, u.prenom, u.email, u.phone, i.status, i.is_client, s.id_price, u.user_registerd, c.nom as nomsoc, c.position, c.pack, g.url
+				SELECT u.id, u.id_api, u.nom, u.prenom, u.email, u.phone, i.status, i.is_client, s.id_price, u.user_registerd, c.nom as nomsoc, c.position, c.pack, g.url
 					FROM utilisateur u
 				LEFT JOIN info_user i ON i.id_user = u.id
 				LEFT JOIN stripe s ON s.id_user = u.id
@@ -43,7 +43,7 @@ class Utilisateur {
 	static function getClientById($id, $my_db) {
 
 		if ($req = $my_db->prepare('
-				SELECT u.id, u.nom, u.prenom, u.email, u.phone, i.status, i.is_client, s.id_price, u.user_registerd, c.nom as nomsoc, c.position, c.pack, c.nbuser, g.url
+				SELECT u.id, u.id_api, u.nom, u.prenom, u.email, u.phone, i.status, i.is_client, s.id_price, u.user_registerd, c.nom as nomsoc, c.position, c.pack, c.nbuser, g.url
 					FROM utilisateur u
 				LEFT JOIN info_user i ON i.id_user = u.id
 				LEFT JOIN stripe s ON s.id_user = u.id
@@ -82,7 +82,7 @@ class Utilisateur {
 	static function getAllUserByClient($id_client, $my_db) {
 
 		if ($req = $my_db->prepare('
-			SELECT u.id, u.nom, u.prenom, u.email, u.phone, u.user_registerd, i.role, i.team, i.status, g.url
+			SELECT u.id, u.id_api, u.nom, u.prenom, u.email, u.phone, u.user_registerd, i.role, i.team, i.status, g.url
 				FROM utilisateur u
 			LEFT JOIN gallerie_images g ON g.id_user = u.id
 			LEFT JOIN info_user i ON i.id_user = u.id
@@ -124,7 +124,7 @@ class Utilisateur {
 		$id_user = filter_var($id_user, FILTER_SANITIZE_STRING);
 
 		if ($req = $my_db->prepare('
-				SELECT u.id, u.nom, u.prenom, u.email, u.phone, i.team,
+				SELECT u.id, u.id_api, u.nom, u.prenom, u.email, u.phone, i.team,
 					i.role, i.country, i.status, i.timezone, i.quota, i.langue,
 					i.adress, i.postal, i.ville, i.date_naissance, g.url
 				FROM utilisateur u
