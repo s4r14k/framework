@@ -63,14 +63,19 @@ class Manager extends \framework\gestion\update {
 		}
     }
     
-    static function set_utilisateur ($nom, $prenom, $email, $phone, $pass, $my_db) {
+    static function set_utilisateur ($id_api, $nom, $prenom, $email, $phone, $pass, $my_db) {
+
+		if(!$id_api) {
+			$id_api = NULL;
+		}
 
 		if ($stmt = $my_db->prepare('
-				INSERT INTO utilisateur (nom, prenom, email, phone, pass, user_registerd)
-				VALUES (:nom, :prenom, :email, :phone, :pass, NOW())
+				INSERT INTO utilisateur (id_api, nom, prenom, email, phone, pass, user_registerd)
+				VALUES (:id_api, :nom, :prenom, :email, :phone, :pass, NOW())
 
 			')) {
 			$stmt->execute(array(
+				'id_api' => $id_api,
 				'nom' => $nom,
 				'prenom' => $prenom,
 				'email' => $email,
@@ -337,7 +342,7 @@ class Manager extends \framework\gestion\update {
 		// $id_img = $my_db->query('SELECT id As id_image FROM gallerie_images ORDER BY id desc limit 1');
         // $image_id = $id_img->fetch();
         
-        self::set_utilisateur($nom, $prenom, $email, $phone, $pass, $my_db);
+        self::set_utilisateur(false, $nom, $prenom, $email, $phone, $pass, $my_db);
 		
 		$user = $my_db->query('SELECT id FROM utilisateur ORDER BY id desc limit 1');
 		$retour = $user->fetch();
@@ -359,7 +364,7 @@ class Manager extends \framework\gestion\update {
 
 	}
 
-	static function set_client_user($nom, $prenom, $email, $phone, $pass, $role, $country, $timezone, $status, $team, $id_client, $users, $img1, $langue, $quota, $my_db) {
+	static function set_client_user($id_api, $nom, $prenom, $email, $phone, $pass, $role, $country, $timezone, $status, $team, $id_client, $users, $img1, $langue, $quota, $my_db) {
 
 		$my_db->beginTransaction();
 
@@ -368,7 +373,7 @@ class Manager extends \framework\gestion\update {
 		// $id_img = $my_db->query('SELECT id As id_image FROM gallerie_images ORDER BY id desc limit 1');
         // $image_id = $id_img->fetch();
         
-        self::set_utilisateur($nom, $prenom, $email, $phone, $pass, $my_db);
+        self::set_utilisateur($id_api, $nom, $prenom, $email, $phone, $pass, $my_db);
 		
 		$user = $my_db->query('SELECT id FROM utilisateur ORDER BY id desc limit 1');
 		$retour = $user->fetch();
